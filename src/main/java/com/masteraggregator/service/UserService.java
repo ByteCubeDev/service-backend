@@ -1,6 +1,7 @@
 package com.masteraggregator.service;
 
 import com.masteraggregator.entity.User;
+import com.masteraggregator.exception.UserNotFoundException;
 import com.masteraggregator.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class UserService {
     }
 
     public User getById(Long id) {
-        return repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return repo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 }

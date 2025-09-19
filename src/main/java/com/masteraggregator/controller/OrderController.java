@@ -7,22 +7,20 @@ import com.masteraggregator.entity.User;
 import com.masteraggregator.service.CategoryService;
 import com.masteraggregator.service.OrderService;
 import com.masteraggregator.service.UserService;
+import com.masteraggregator.utils.Status_Order;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/api/orders")
+@RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
     private final UserService userService;
     private final CategoryService categoryService;
-
-    public OrderController(OrderService orderService, UserService userService, CategoryService categoryService) {
-        this.orderService = orderService;
-        this.userService = userService;
-        this.categoryService = categoryService;
-    }
 
     @PostMapping
     public Order create(@RequestBody OrderDTO dto) {
@@ -37,7 +35,7 @@ public class OrderController {
                 .address(dto.getAddress())
                 .latitude(dto.getLatitude())
                 .longitude(dto.getLongitude())
-                //.status_order(Order) !!!!!!!!!!!!!!
+                .status_order(Status_Order.CREATED)
                 .build();
 
         return orderService.createOrder(order);

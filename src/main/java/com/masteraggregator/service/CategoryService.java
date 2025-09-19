@@ -1,59 +1,45 @@
 package com.masteraggregator.service;
 
 import com.masteraggregator.entity.Category;
+import com.masteraggregator.exception.CategoryNotFoundException;
 import com.masteraggregator.repository.CategoryRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
-
     private final CategoryRepository repository;
 
-    public CategoryService(CategoryRepository repository) {
-        this.repository = repository;
-    }
-
-    /**
-     * Создать новую категорию
-     */
+    @Transactional
     public Category createCategory(Category category) {
         return repository.save(category);
     }
 
-    /**
-     * Получить все категории
-     */
     public List<Category> getAllCategories() {
         return repository.findAll();
     }
 
-    /**
-     * Получить категорию по ID
-     */
-    public Category getCategoryById(Long id) {
+    public Category getById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Category not found with id=" + id));
     }
 
-    /**
-     * Обновить категорию
-     */
+    @Transactional
     public Category updateCategory(Long id, String newName) {
-        Category category = getCategoryById(id);
+        Category category = getById(id);
         category.setName(newName);
         return repository.save(category);
     }
-    public Category getById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+    @Transactional
+    public void deleteCategory(Long id) {
+        Category category = repository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(id));
+        repository.delete(category);
     }
 
-    /**
-     * Удалить категорию
-     */
-    public void deleteCategory(Long id) {
-        repository.deleteById(id);
-    }
 }

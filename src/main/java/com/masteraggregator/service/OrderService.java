@@ -2,6 +2,7 @@ package com.masteraggregator.service;
 
 
 import com.masteraggregator.entity.Order;
+import com.masteraggregator.exception.OrderNotFoundException;
 import com.masteraggregator.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class OrderService {
     }
 
     public Order getOrderById(Long id) {
-        return repo.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        return repo.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
     }
 }

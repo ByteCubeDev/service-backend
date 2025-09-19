@@ -1,50 +1,41 @@
 package com.masteraggregator.service;
 
 import com.masteraggregator.entity.OrderResponse;
+import com.masteraggregator.exception.OrderResponseNotFoundException;
 import com.masteraggregator.repository.OrderResponseRepository;
 import com.masteraggregator.utils.Status_Response;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderResponseService {
-
     private final OrderResponseRepository repository;
 
-    public OrderResponseService(OrderResponseRepository repository) {
-        this.repository = repository;
-    }
-
-    /**
-     * Создать новый отклик мастера на заявку
-     */
+    @Transactional
     public OrderResponse createResponse(OrderResponse response) {
-        // Тут можно добавить валидацию, например, что мастер может откликнуться только один раз
+        // TODO: добавить проверку, что мастер может откликнуться только один раз
         return repository.save(response);
     }
 
-    /**
-     * Получить все отклики для конкретной заявки
-     */
     public List<OrderResponse> getResponsesByOrder(Long orderId) {
         return repository.findByOrder_Id(orderId);
     }
 
-    /**
-     * Получить все отклики конкретного мастера
-     */
     public List<OrderResponse> getResponsesByMaster(Long masterId) {
         return repository.findByMaster_Id(masterId);
     }
 
-    /**
-     * Обновить статус отклика (PENDING -> ACCEPTED / REJECTED)
-     */
+    @Transactional
     public OrderResponse updateStatus(Long responseId, Status_Response newStatus) {
         OrderResponse response = repository.findById(responseId)
-                .orElseThrow(() -> new RuntimeException("OrderResponse not found"));
+                .orElseThrow(() -> new OrderResponseNotFoundException(responseId));
+
         response.setStatus(newStatus);
         return repository.save(response);
     }
+
 }
