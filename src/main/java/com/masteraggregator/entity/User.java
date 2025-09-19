@@ -33,7 +33,6 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    private String avatarUrl;
     private String about;
     private Integer experienceYears;
     private Boolean isVerified = false;

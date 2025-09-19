@@ -5,6 +5,7 @@ import com.masteraggregator.entity.Category;
 import com.masteraggregator.entity.Order;
 import com.masteraggregator.entity.User;
 import com.masteraggregator.service.CategoryService;
+import com.masteraggregator.service.FirestoreService;
 import com.masteraggregator.service.OrderService;
 import com.masteraggregator.service.UserService;
 import com.masteraggregator.utils.Status_Order;
@@ -17,6 +18,9 @@ import java.util.List;
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
 public class OrderController {
+
+    // FIRESTORE
+    private final FirestoreService firestoreService;
 
     private final OrderService orderService;
     private final UserService userService;
