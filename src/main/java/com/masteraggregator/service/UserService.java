@@ -28,4 +28,9 @@ public class UserService {
         return repo.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
+
+    public void deleteUser(Long id){
+        User user = getById(id);
+        repo.delete(user);
+    }
 }
